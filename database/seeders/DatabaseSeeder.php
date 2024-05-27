@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Organization;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,11 +14,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Organizations that will have users
+        $organizations = Organization::factory(2)->create();
+        // Empty organization
+        Organization::factory()->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        User::factory(10)->create(new Sequence(
+            ['organization_id' => $organizations[0]],
+            ['organization_id' => $organizations[1]],
+        ));
     }
 }
